@@ -1,4 +1,5 @@
-* 
-!*.h
-!*.cpp
-!.gitignore
+.gitignore
+*.txt
+test
+cmake-build-debug
+.*
