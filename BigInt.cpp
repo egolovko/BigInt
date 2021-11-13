@@ -9,6 +9,7 @@ AbstractMulter* BigInt::multer = new BasicMulter;
 BigInt::BigInt(const BigInt& b) {
     this->base = b.base;
     this->numbers = b.numbers;
+    this->sign = b.sign;
 }
 
 
@@ -18,6 +19,12 @@ BigInt::BigInt(string str_num) {
 
 
 BigInt::BigInt(long long number) {
+    if (number < 0) {
+        this->sign = -1;
+    } else {
+        this->sign = 1;
+    }
+    number = abs(number);
     while (number > base) {
         numbers.push_back(number % base);
         number /= base;
@@ -26,7 +33,31 @@ BigInt::BigInt(long long number) {
 }
 
 
+BigInt::BigInt(vector<int>::iterator i1, vector<int>::iterator i2, int base, int sign) {
+    this->sign = sign;
+    this->numbers.assign(i1, i2);
+    this->base = base;
+
+    int carry = 0;
+    for (int& item : numbers) {
+        carry = item / base;
+        if (carry)
+            item %= base;
+    }
+
+    if (carry)
+        numbers.push_back(carry);
+
+}
+
+
 void BigInt::str_init(string str_num) {
+    if (str_num[0] == '-') {
+        str_num = str_num.substr(1, str_num.length());
+        cout << str_num << endl;
+        this->sign = -1;
+    }
+
     int base_len = 0;
     int temp_base = base;
     while (temp_base > 0) {
@@ -72,12 +103,151 @@ void BigInt::resize(int n) {
 }
 
 
+vector<int>::iterator BigInt::begin() {
+    return numbers.begin();
+}
+
+
+vector<int>::iterator BigInt::end() {
+    return numbers.end();
+}
+
+
+BigInt& BigInt::left_shift(int shift) {
+    normalize();
+
+    int n = size();
+
+    for (int i = n; i < n+shift; ++i)
+        numbers.push_back(0);
+
+    for (int i = n+shift-1; i >= shift; --i)
+        numbers[i] = numbers[i-shift];
+
+    for (int i = 0; i < shift; ++i)
+        numbers[i] = 0;
+
+    return *this;
+}
+
+
+BigInt& BigInt::right_shift(int shift) {
+    int n = size();
+
+    for (int i = 0; i < n - shift; ++i)
+        numbers[i] = numbers[i+shift];
+
+    for (int i = shift; i < n; ++i)
+        numbers[i] = 0;
+
+    normalize();
+    return *this;
+}
+
+
+BigInt BigInt::add(BigInt d1, BigInt d2) {
+    assert(d1.base == d2.base);
+
+    BigInt res;
+    int m = max(d1.size(), d2.size());
+    res.resize(m);
+
+    for (int i = 0; i < m; ++i) {
+        int num1 = (i < d1.size() ? d1.sign * d1[i] : 0);
+        int num2 = (i < d2.size() ? d2.sign * d2[i] : 0);
+        res[i] = num1 + num2;
+    }
+
+    res.normalize();
+
+    if (res[res.size()-1] < 0) {
+        res.sign = -1;
+        for (int& item : res.numbers)
+            item = -item;
+    }
+
+    int carry = 0;
+    for (int i = 0; i < res.size(); ++i) {
+        res[i] += carry;
+
+        if (res[i] < 0) {
+            res[i] += d1.base;
+            carry = -1;
+        } else if (res[i] > 9) {
+            res[i] -= d1.base;
+            carry = 1;
+        } else {
+            carry = 0;
+        }
+    }
+
+    if (carry)
+        res.numbers.push_back(carry);
+
+    res.normalize();
+
+    return res;
+}
+
+
+BigInt BigInt::sub(BigInt b1, BigInt b2) {
+    assert(b1.base == b2.base);
+
+    BigInt res;
+    int m = max(b1.size(), b2.size());
+    res.resize(m);
+
+    for (int i = 0; i < m; ++i) {
+        int num1 = (i < b1.size() ? b1.sign * b1[i] : 0);
+        int num2 = (i < b2.size() ? b2.sign * b2[i] : 0);
+        res[i] = num1 - num2;
+    }
+
+    // after sub can be leading zero
+    res.normalize();
+
+    if (res[res.size()-1] < 0) {
+        res.sign = -1;
+        for (int& item : res.numbers)
+            item = -item;
+    }
+
+    int carry = 0;
+    for (int i = 0; i < res.size(); ++i) {
+        res[i] += carry;
+
+        if (res[i] < 0) {
+            res[i] += b1.base;
+            carry = -1;
+        } else if (res[i] > 9) {
+            res[i] -= b1.base;
+            carry = 1;
+        } else {
+            carry = 0;
+        }
+
+    }
+
+    if (carry)
+        res.numbers.push_back(carry);
+
+    res.normalize();
+
+    return res;
+}
+
+
 int& BigInt::operator[](int i) {
     return numbers[i];
 }
 
 
 ostream& operator<<(ostream& out, const BigInt& num) {
+
+    if (num.sign == -1) {
+        cout << '-';
+    }
+
     for (int i = num.numbers.size()-1; i >= 0; --i)
         cout << num.numbers[i];
     return out;
@@ -94,49 +264,121 @@ istream& operator>>(istream& in, BigInt& num) {
 }
 
 
-BigInt operator+(BigInt& d1, BigInt& d2) {
-    assert(d1.base == d2.base);
-
-    BigInt d3 = d1;
-
-    int carry = 0;
-    int m = max(d3.size(), d2.size());
-
-    for (int i = 0; i < m || carry; ++i) {
-        if (i == d3.size())
-            d3.numbers.push_back(0);
-        
-        d3.numbers[i] += carry + (i < d2.size() ? d2.numbers[i] : 0);
-        carry = d3.numbers[i] >= d3.base;
-
-        if (d3.numbers[i] >= d3.base)
-            d3.numbers[i] -= d3.base;
-    
-    }
-
-    return d3; // move(d3)
+BigInt operator+(BigInt b1, BigInt b2) {
+    return BigInt::add(b1, b2);
 }
 
 
-BigInt operator-(BigInt& b1, BigInt& b2) {
-    assert(b1.base == b2.base);
+BigInt operator-(BigInt b1, BigInt b2) {
+    return BigInt::sub(b1, b2);
+}
 
-    BigInt b3 = b1;
+
+BigInt operator*(BigInt b, int l) {
+    BigInt res = b;
+
+    int lsign = ((l >= 0) * 2 - 1);
+    res.sign = b.sign * lsign;
+    l *= lsign;
+
 
     int carry = 0;
-    for (size_t i = 0; i < b2.size() || carry; ++i) {
-        b3[i] -= carry + (i < b2.size() ? b2[i] : 0);
-        carry = b3[i] < 0;
+    for (int& item : res) {
+        item *= l;
+        item += carry;
+        carry = item / b.base;
         if (carry)
-            b3[i] += b3.get_base();
+            item %= b.base;
     }
-    while (b3.numbers.size() > 1 && b3.numbers.back() == 0)
-        b3.numbers.pop_back();
 
-    return b3;
+    if (carry)
+        res.numbers.push_back(carry);
+
+    return res;
 }
 
 
-BigInt operator*(BigInt& b1, BigInt& b2) {
+BigInt operator*(int l, BigInt b) {
+    return b * l;
+}
+
+
+BigInt operator*(BigInt b1, BigInt b2) {
     return BigInt::multer->mult(b1, b2);
 }
+
+
+bool operator>(BigInt b1, BigInt b2) {
+    int m = max(b1.size(), b2.size());
+    b1.resize(m);
+    b2.resize(m);
+
+    for (int i = m-1; i >= 0; --i) {
+        if (b1.sign * b1.numbers[i] > b2.sign * b2.numbers[i])
+            return true;
+    }
+    return false;
+}
+
+
+bool operator<(BigInt b1, BigInt b2) {
+    int m = max(b1.size(), b2.size());
+    b1.resize(m);
+    b2.resize(m);
+
+    for (int i = m-1; i >= 0; --i) {
+        if (b1.sign * b1.numbers[i] < b2.sign * b2.numbers[i])
+            return true;
+    }
+    return false;
+}
+
+
+BigInt operator/(BigInt b, int l) {
+    BigInt c(b);
+
+    int lsign = ((l >= 0) * 2 - 1);
+    c.sign = b.sign * lsign;
+    l *= lsign;
+
+    int carry = 0;
+    for (int i=(int)c.size()-1; i>=0; --i) {
+        long long cur = c[i] + carry * 1ll * c.get_base();
+        c[i] = int (cur / l);
+        carry = int (cur % l);
+    }
+    while (c.size() > 1 && c.numbers.back() == 0)
+        c.numbers.pop_back();
+
+
+    return c;
+}
+
+
+BigInt operator/(BigInt x, BigInt y) {
+    BigInt res("0"), z("1");
+    int k = 0;
+
+    while (!(y > x))
+    {
+        y = y + y;
+        z = z + z;
+        ++k;
+    }
+    while (k)
+    {
+        y = y / 2;
+        z = z / 2;
+        --k;
+        while (!(y > x))
+        {
+            x = x - y;
+            res = res + z;
+        }
+    }
+
+    res.sign = x.sign * y.sign;
+    return res;
+}
+
+

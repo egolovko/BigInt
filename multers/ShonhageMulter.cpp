@@ -27,7 +27,7 @@ void ShonhageMulter::fft(vector<base>& a, bool invert) {
 }
 
 
-BigInt ShonhageMulter::mult(BigInt& b1, BigInt& b2) {
+BigInt ShonhageMulter::_mult(BigInt& b1, BigInt& b2) {
     BigInt res;
     res.set_base(b1.get_base());
 
@@ -56,5 +56,12 @@ BigInt ShonhageMulter::mult(BigInt& b1, BigInt& b2) {
     res.numbers.push_back(carry);
     res.normalize();
 
+    return res;
+}
+
+
+BigInt ShonhageMulter::mult(BigInt& b1, BigInt& b2) {
+    BigInt res = _mult(b1, b2);
+    res.sign = b1.sign * b2.sign;
     return res;
 }

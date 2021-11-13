@@ -1,7 +1,8 @@
 #include "BasicMulter.h"
 #include "../BigInt.h"
 
-BigInt BasicMulter::mult(BigInt& b1, BigInt& b2) {
+
+BigInt BasicMulter::_mult(BigInt& b1, BigInt& b2) {
     if (b1.get_base() != b2.get_base())
         throw "Different bases";
 
@@ -21,4 +22,11 @@ BigInt BasicMulter::mult(BigInt& b1, BigInt& b2) {
     b3.normalize();
 
     return b3;
+}
+
+
+BigInt BasicMulter::mult(BigInt& b1, BigInt& b2) {
+    BigInt res = _mult(b1, b2);
+    res.sign = b1.sign * b2.sign;
+    return res;
 }

@@ -2,14 +2,14 @@
 #include "AbstractMulter.h"
 
 class BigInt;
+class BasicMulter;
 
-class BasicMulter : public AbstractMulter {
+class Toom3Multer : public AbstractMulter{
 private:
+    static BasicMulter* multer;
+    const int K = 3;
     BigInt _mult(BigInt&, BigInt&);
 
 public:
-    BasicMulter() = default;
-    BasicMulter(const BasicMulter&) = default;
-
     virtual BigInt mult(BigInt&, BigInt&) override;
 };

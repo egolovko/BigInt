@@ -41,7 +41,7 @@ BigInt& KaratsubaMulter::big_pow_10(BigInt& b, int deg) {
 }
 
 
-BigInt KaratsubaMulter::mult(BigInt& b1, BigInt& b2) {
+BigInt KaratsubaMulter::_mult(BigInt& b1, BigInt& b2) {
     if (b1.size() == 1 || b2.size() == 1) {
         return KaratsubaMulter::basic_multer->mult(b1, b2);
     }
@@ -63,14 +63,19 @@ BigInt KaratsubaMulter::mult(BigInt& b1, BigInt& b2) {
     BigInt z1 = mult(sum1, sum2);
     BigInt z2 = mult(high1, high2);
 
-    BigInt temp1 = z1 - z2;
-    BigInt temp2 = temp1 - z0;
-    BigInt s1 = big_pow_10(z2, m*2);
-    BigInt s2 = big_pow_10(temp2, m);
-    BigInt s3 = s1 + s2;
-    BigInt s4 = s3 + z0;
 
-    return s4;
+    BigInt temp = z1 - z2 - z0;
+
+    BigInt s1 = big_pow_10(z2, m*2);
+    BigInt s2 = big_pow_10(temp, m);
+
+    return s1 + s2 + z0;
+}
+
+BigInt KaratsubaMulter::mult(BigInt& b1, BigInt& b2) {
+    BigInt res = _mult(b1, b2);
+    res.sign = b1.sign * b2.sign;
+    return res;
 }
 
 

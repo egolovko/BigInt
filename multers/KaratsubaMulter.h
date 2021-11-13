@@ -12,6 +12,7 @@ class KaratsubaMulter : public AbstractMulter {
 private:
     static BasicMulter* basic_multer;
 
+    BigInt _mult(BigInt&, BigInt&);
     void split_at_begin(BigInt&, int, BigInt&, BigInt&);
     void split_at_end(BigInt&, int, BigInt&, BigInt&);
     BigInt& big_pow_10(BigInt&, int);

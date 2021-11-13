@@ -10,6 +10,7 @@ typedef complex<double> base;
 class ShonhageMulter : public AbstractMulter {
 private:
     void fft(vector<base>& a, bool invert);
+    BigInt _mult(BigInt&, BigInt&);
 
 public:
     BigInt mult(BigInt&, BigInt&);
