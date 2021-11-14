@@ -237,6 +237,20 @@ BigInt BigInt::sub(BigInt b1, BigInt b2) {
 }
 
 
+BigInt BigInt::binpow(BigInt a, int n) {
+    BigInt res(1);
+
+    while (n) {
+        if (n & 1)
+            res = res * a;
+        a = a * a;
+        n >>= 1;                // n /= 2
+    }
+
+    return res;
+}
+
+
 int& BigInt::operator[](int i) {
     return numbers[i];
 }
@@ -261,6 +275,68 @@ istream& operator>>(istream& in, BigInt& num) {
     num.str_init(str_num);
 
     return in;
+}
+
+
+bool operator==(BigInt b1, BigInt b2) {
+    assert(b1.base == b2.base);
+
+    if (b1.sign != b2.sign)
+        return 0;
+
+    b1.normalize();
+    b2.normalize();
+
+    if (b1.size() != b2.size())
+        return 0;
+
+    for (int i = 0; i < b1.size(); ++i) {
+        if (b1[i] != b2[i])
+            return 0;
+    }
+
+    return 1;
+}
+
+
+bool operator>(BigInt b1, BigInt b2) {
+    int m = max(b1.size(), b2.size());
+    b1.resize(m);
+    b2.resize(m);
+
+    for (int i = m-1; i >= 0; --i) {
+        if (b1.sign * b1.numbers[i] > b2.sign * b2.numbers[i])
+            return true;
+        else if (b1.sign * b1.numbers[i] < b2.sign * b2.numbers[i]) {
+            return false;
+        }
+    }
+    return false;
+}
+
+
+bool operator<(BigInt b1, BigInt b2) {
+    int m = max(b1.size(), b2.size());
+    b1.resize(m);
+    b2.resize(m);
+
+    for (int i = m-1; i >= 0; --i) {
+        if (b1.sign * b1.numbers[i] < b2.sign * b2.numbers[i])
+            return true;
+        else if (b1.sign * b1.numbers[i] > b2.sign * b2.numbers[i])
+            return false;
+    }
+    return false;
+}
+
+
+bool operator>=(BigInt b1, BigInt b2) {
+    return b1 > b2 || b1 == b2;
+}
+
+
+bool operator<=(BigInt b1, BigInt b2) {
+    return b1 < b2 || b1 == b2;
 }
 
 
@@ -305,32 +381,6 @@ BigInt operator*(int l, BigInt b) {
 
 BigInt operator*(BigInt b1, BigInt b2) {
     return BigInt::multer->mult(b1, b2);
-}
-
-
-bool operator>(BigInt b1, BigInt b2) {
-    int m = max(b1.size(), b2.size());
-    b1.resize(m);
-    b2.resize(m);
-
-    for (int i = m-1; i >= 0; --i) {
-        if (b1.sign * b1.numbers[i] > b2.sign * b2.numbers[i])
-            return true;
-    }
-    return false;
-}
-
-
-bool operator<(BigInt b1, BigInt b2) {
-    int m = max(b1.size(), b2.size());
-    b1.resize(m);
-    b2.resize(m);
-
-    for (int i = m-1; i >= 0; --i) {
-        if (b1.sign * b1.numbers[i] < b2.sign * b2.numbers[i])
-            return true;
-    }
-    return false;
 }
 
 
@@ -382,3 +432,8 @@ BigInt operator/(BigInt x, BigInt y) {
 }
 
 
+BigInt operator%(BigInt x, BigInt y) {
+    while (x >= y)
+        x = x - y;
+    return x;
+}

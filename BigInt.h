@@ -28,6 +28,7 @@ public:
 
     static BigInt add(BigInt, BigInt);
     static BigInt sub(BigInt, BigInt);
+    static BigInt binpow(BigInt, int n);
 
     int get_base();
     void set_base(int);
@@ -44,13 +45,17 @@ public:
 
     friend ostream& operator<<(ostream&, const BigInt&);
     friend istream& operator>>(istream&, BigInt&);
+    friend bool operator==(BigInt, BigInt);
+    friend bool operator>(BigInt, BigInt);
+    friend bool operator<(BigInt, BigInt);
+    friend bool operator>=(BigInt, BigInt);
+    friend bool operator<=(BigInt, BigInt);
     friend BigInt operator+(BigInt, BigInt);
     friend BigInt operator-(BigInt, BigInt);
     friend BigInt operator*(BigInt, int);
     friend BigInt operator*(int, BigInt);
     friend BigInt operator*(BigInt, BigInt);
-    friend bool operator>(BigInt, BigInt);
-    friend bool operator<(BigInt, BigInt);
     friend BigInt operator/(BigInt, int);
     friend BigInt operator/(BigInt, BigInt);
+    friend BigInt operator%(BigInt, BigInt);
 };
