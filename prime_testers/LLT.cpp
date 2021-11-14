@@ -1,7 +1,7 @@
 #include "LLT.h"
 #include "../BigInt.h"
 
-bool LLT::test(int p) {
+bool LLT::is_prime(int p) {
     int k = 1;
     BigInt S(4);
     BigInt M = BigInt::binpow(BigInt(2), p) - BigInt(1);

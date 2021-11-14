@@ -28,7 +28,10 @@ public:
 
     static BigInt add(BigInt, BigInt);
     static BigInt sub(BigInt, BigInt);
-    static BigInt binpow(BigInt, int n);
+    static BigInt binpow(BigInt, int);
+    static BigInt binpow(BigInt, int, BigInt);
+    static BigInt binpow(BigInt, BigInt);
+    static BigInt binpow(BigInt, BigInt, BigInt);
 
     int get_base();
     void set_base(int);
@@ -41,11 +44,13 @@ public:
     vector<int>::iterator end();
     BigInt& left_shift(int);
     BigInt& right_shift(int);
-
+    bool even();
+    bool odd();
 
     friend ostream& operator<<(ostream&, const BigInt&);
     friend istream& operator>>(istream&, BigInt&);
     friend bool operator==(BigInt, BigInt);
+    friend bool operator!=(BigInt, BigInt);
     friend bool operator>(BigInt, BigInt);
     friend bool operator<(BigInt, BigInt);
     friend bool operator>=(BigInt, BigInt);

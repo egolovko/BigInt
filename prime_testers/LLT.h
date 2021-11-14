@@ -6,5 +6,5 @@
 
 class LLT {
 public:
-    static bool test(int);
+    static bool is_prime(int);
 };

@@ -5,13 +5,16 @@
 #include "multers/ShonhageMulter.h"
 #include "multers/Toom3Multer.h"
 #include "prime_testers/LLT.h"
+#include "prime_testers/MRT.h"
 
 using namespace std;
 
 
 int main() {
-    BigInt b1(7);
-    BigInt b2(4);
+    int k = 7;
 
-    cout << LLT::test(11);
+    for (int i = 0; i < 100; ++i) {
+        if (MRT::is_prime(BigInt(i), k))
+            cout << i << endl;
+    }
 }
