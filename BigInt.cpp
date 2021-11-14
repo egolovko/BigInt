@@ -201,6 +201,15 @@ BigInt BigInt::binpow(BigInt a, BigInt n, BigInt m) {
 }
 
 
+BigInt BigInt::gcd(BigInt a, BigInt b) {
+    while (b > 0) {
+        a = a % b;
+        swap(a, b);
+    }
+    return a;
+}
+
+
 void BigInt::str_init(string str_num) {
     if (str_num[0] == '-') {
         str_num = str_num.substr(1, str_num.length());
@@ -335,6 +344,16 @@ istream& operator>>(istream& in, BigInt& num) {
     return in;
 }
 
+
+BigInt operator-(BigInt b) {
+    b.sign *= -1;
+    return b;
+}
+
+
+BigInt operator+(BigInt b) {
+    return b;
+}
 
 bool operator==(BigInt b1, BigInt b2) {
     assert(b1.base == b2.base);

@@ -6,6 +6,7 @@
 #include "multers/Toom3Multer.h"
 #include "prime_testers/LLT.h"
 #include "prime_testers/MRT.h"
+#include "prime_testers/SST.h"
 
 using namespace std;
 
@@ -14,7 +15,7 @@ int main() {
     int k = 7;
 
     for (int i = 0; i < 100; ++i) {
-        if (MRT::is_prime(BigInt(i), k))
+        if (SST::is_prime(BigInt(i), k))
             cout << i << endl;
     }
 }
