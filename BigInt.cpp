@@ -21,15 +21,15 @@ BigInt::BigInt(string str_num) {
 BigInt::BigInt(long long number) {
     if (number < 0) {
         this->sign = -1;
+        number = abs(number);
     } else {
         this->sign = 1;
     }
-    number = abs(number);
-    while (number > base) {
+
+    while (number > 0) {
         numbers.push_back(number % base);
         number /= base;
     }
-    numbers.push_back(number);
 }
 
 
