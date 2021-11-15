@@ -8,15 +8,13 @@
 #include "prime_testers/MRT.h"
 #include "prime_testers/SST.h"
 #include "prime_testers/LT.h"
+#include "prime_testers/QFT.h"
 
 using namespace std;
 
 
 int main() {
-    int k = 2;
+    int k = 7;
 
-    for (int i = 0; i < 100; ++i) {
-        if (LT::is_prime(BigInt(i), k))
-            cout << i << endl;
-    }
+    cout << QFT::is_prime(19);
 }

@@ -26,6 +26,7 @@ bool LT::is_prime(BigInt p, int k) {
         BigInt a = generator->next_int();
         BigInt res = BigInt::binpow(a, deg, p);
 
+        // res != BigInt(1) || res != (p - BigInt(1)) => return false; Do not work. Why?????
         if (res == BigInt(1) || res == (p - BigInt(1)))
             continue;
         else
