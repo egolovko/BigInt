@@ -1,10 +1,11 @@
 #include "BigInt.h"
 #include "multers/AbstractMulter.h"
 #include "multers/BasicMulter.h"
-
+#include "dividers/Pow2Divider.h"
+#include "dividers/NewtonRaphsonDivider.h"
 
 AbstractMulter* BigInt::multer = new BasicMulter;
-
+AbstractDivider* BigInt::divider = new Pow2Divider;
 
 BigInt::BigInt(const BigInt& b) {
     this->base = b.base;
@@ -48,6 +49,7 @@ BigInt::BigInt(vector<int>::iterator i1, vector<int>::iterator i2, int base, int
     if (carry)
         numbers.push_back(carry);
 
+    normalize();
 }
 
 
@@ -213,7 +215,6 @@ BigInt BigInt::gcd(BigInt a, BigInt b) {
 void BigInt::str_init(string str_num) {
     if (str_num[0] == '-') {
         str_num = str_num.substr(1, str_num.length());
-        cout << str_num << endl;
         this->sign = -1;
     }
 
@@ -488,29 +489,8 @@ BigInt operator/(BigInt b, int l) {
 
 
 BigInt operator/(BigInt x, BigInt y) {
-    BigInt res("0"), z("1");
-    int k = 0;
-
-    while (!(y > x))
-    {
-        y = y + y;
-        z = z + z;
-        ++k;
-    }
-    while (k)
-    {
-        y = y / 2;
-        z = z / 2;
-        --k;
-        while (!(y > x))
-        {
-            x = x - y;
-            res = res + z;
-        }
-    }
-
-    res.sign = x.sign * y.sign;
-    return res;
+    pair<BigInt, int> res = BigInt::divider->div(x, y);
+    return {res.first.begin()+res.second, res.first.end(), res.first.base, 1};
 }
 
 

@@ -13,9 +13,9 @@ BigInt BasicMulter::_mult(BigInt& b1, BigInt& b2) {
 
     for (int i = 0; i < (int)b1.size(); ++i) {
         for (int j = 0, carry = 0; j < (int)b2.size() || carry; ++j) {
-            long long curr = b3[i+j] + b1[i]* (j < (int)b2.size() ? b2[j] : 0) + carry;
-            b3[i+j] = (int)(curr % b3.get_base());
-            carry = (int)(curr / b3.get_base());
+            long long curr = b3[i + j] + b1[i] * (j < (int) b2.size() ? b2[j] : 0) + carry;
+            b3[i + j] = (int) (curr % b3.get_base());
+            carry = (int) (curr / b3.get_base());
         }
     }
 

@@ -8,6 +8,7 @@
 using namespace std;
 
 class AbstractMulter;
+class AbstractDivider;
 
 class BigInt {
 private:
@@ -17,6 +18,7 @@ public:
 
     int sign = 1;
     static AbstractMulter* multer;
+    static AbstractDivider* divider;
 
     vector<int> numbers;
 
