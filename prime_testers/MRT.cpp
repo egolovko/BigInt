@@ -27,14 +27,17 @@ bool MRT::_test(BigInt& d, BigInt& n) {
 
 
 bool MRT::is_prime(BigInt n, int k) {
-    generator->set_lower_bound(BigInt(2));
-    generator->set_upper_bound(BigInt(n-2));
+    if (n != BigInt(2) && n.even())
+        return false;
 
     if (n <= BigInt(1) || n == BigInt(4))
         return false;
 
-    if (n <= BigInt(3))
+    if (n < BigInt(4))
         return true;
+
+    generator->set_lower_bound(BigInt(2));
+    generator->set_upper_bound(BigInt(n-2));
 
     BigInt d(n-1);
     while (d.even()) // d % 2 == 0

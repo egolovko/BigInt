@@ -39,14 +39,14 @@ BigInt SST::jacobi(BigInt a, BigInt b) {
 }
 
 bool SST::is_prime(BigInt n, int k) {
+    if (n != BigInt(2) && n.even())
+        return false;
+
     if (n < BigInt(2))
         return false;
 
     if (n < BigInt(4))
         return true;
-
-    if (n.even())
-        return false;
 
     generator->set_lower_bound({2});
     generator->set_upper_bound(n-1);

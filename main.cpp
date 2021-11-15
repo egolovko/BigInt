@@ -7,15 +7,16 @@
 #include "prime_testers/LLT.h"
 #include "prime_testers/MRT.h"
 #include "prime_testers/SST.h"
+#include "prime_testers/LT.h"
 
 using namespace std;
 
 
 int main() {
-    int k = 7;
+    int k = 2;
 
     for (int i = 0; i < 100; ++i) {
-        if (SST::is_prime(BigInt(i), k))
+        if (LT::is_prime(BigInt(i), k))
             cout << i << endl;
     }
 }
