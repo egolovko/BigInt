@@ -27,6 +27,9 @@ BigInt::BigInt(long long number) {
         this->sign = 1;
     }
 
+    if (number == 0)
+        numbers.push_back(0);
+
     while (number > 0) {
         numbers.push_back(number % base);
         number /= base;
@@ -239,8 +242,39 @@ int BigInt::get_base() {
 }
 
 
+AbstractMulter& BigInt::get_multer() {
+    return (*multer);
+}
+
+
+AbstractDivider& BigInt::get_divider() {
+    return (*divider);
+}
+
+
 void BigInt::set_base(int base) {
     this->base = base;
+}
+
+
+void BigInt::set_multer(AbstractMulter* multer) {
+    if (multer != nullptr && multer != NULL)
+        delete BigInt::multer;
+    BigInt::multer = multer;
+}
+
+
+void BigInt::set_divider(AbstractDivider* divider) {
+
+    if (typeid(*divider) == typeid(NewtonRaphsonDivider)) {
+        cout << "\nWarning!\n";
+        cout << "Some algorithms may not perform well due to approximation \n"
+            << "when using approximate calculations like NewtonRaphsonDivider\n\n";
+    }
+
+    if (divider != nullptr && divider != NULL)
+        delete BigInt::divider;
+    BigInt::divider = divider;
 }
 
 
@@ -489,8 +523,8 @@ BigInt operator/(BigInt b, int l) {
 
 
 BigInt operator/(BigInt x, BigInt y) {
-    pair<BigInt, int> res = BigInt::divider->div(x, y);
-    return {res.first.begin()+res.second, res.first.end(), res.first.base, 1};
+    pair<BigInt, BigInt> res = BigInt::divider->div(x, y);
+    return res.first;
 }
 
 

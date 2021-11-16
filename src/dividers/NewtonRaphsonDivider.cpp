@@ -6,7 +6,7 @@
 AbstractMulter* NewtonRaphsonDivider::multer = new ShonhageMulter;
 
 
-pair<BigInt, int> NewtonRaphsonDivider::div(BigInt a, BigInt b) {
+pair<BigInt, BigInt> NewtonRaphsonDivider::div(BigInt a, BigInt b) {
     BigInt x_numerator = {1};
     BigInt x_denominator = {10};
     int e = 1;
@@ -18,5 +18,8 @@ pair<BigInt, int> NewtonRaphsonDivider::div(BigInt a, BigInt b) {
     }
 
     x_numerator = x_numerator * a;
-    return {x_numerator, e};
+    x_numerator.resize(e+1);
+    BigInt int_part(x_numerator.begin()+e, x_numerator.end(), x_numerator.get_base(), +1);
+    BigInt float_part(x_numerator.begin(), x_numerator.begin()+e, x_numerator.get_base(), +1);
+    return {int_part, float_part};
 }

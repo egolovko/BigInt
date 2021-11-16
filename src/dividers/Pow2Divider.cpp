@@ -1,7 +1,7 @@
 #include "Pow2Divider.h"
 #include "../BigInt.h"
 
-pair<BigInt, int> Pow2Divider::div(BigInt x, BigInt y) {
+pair<BigInt, BigInt> Pow2Divider::div(BigInt x, BigInt y) {
     BigInt res("0"), z("1");
     int k = 0;
 
@@ -24,5 +24,5 @@ pair<BigInt, int> Pow2Divider::div(BigInt x, BigInt y) {
     }
 
     res.sign = x.sign * y.sign;
-    return {res, 0};
+    return {res, BigInt(0)};
 }

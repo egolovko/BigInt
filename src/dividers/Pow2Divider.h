@@ -11,5 +11,5 @@ class BigInt;
 // Check resoursec/long div.png
 class Pow2Divider : public AbstractDivider {
 public:
-    virtual pair<BigInt, int> div(BigInt, BigInt) override;
+    virtual pair<BigInt, BigInt> div(BigInt, BigInt) override;
 };

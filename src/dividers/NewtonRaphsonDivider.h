@@ -10,9 +10,9 @@ class AbstractMulter;
 // Newton-Raphson division
 class NewtonRaphsonDivider : public AbstractDivider {
 private:
-    static const int COUNT_OF_ITERATIONS = 5;
     static AbstractMulter* multer;
 
 public:
-    virtual pair<BigInt, int> div(BigInt, BigInt) override;
+    static const int COUNT_OF_ITERATIONS = 5;
+    virtual pair<BigInt, BigInt> div(BigInt, BigInt) override;
 };

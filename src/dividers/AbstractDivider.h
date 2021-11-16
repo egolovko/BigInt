@@ -7,6 +7,6 @@ class BigInt;
 
 class AbstractDivider {
 public:
-    virtual pair<BigInt, int> div(BigInt, BigInt) = 0;
+    virtual pair<BigInt, BigInt> div(BigInt, BigInt) = 0;
 };
 

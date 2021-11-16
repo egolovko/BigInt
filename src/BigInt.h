@@ -14,11 +14,11 @@ class BigInt {
 private:
     int base = 10;
     void str_init(string);
-public:
-
-    int sign = 1;
     static AbstractMulter* multer;
     static AbstractDivider* divider;
+
+public:
+    int sign = 1;
 
     vector<int> numbers;
 
@@ -35,6 +35,10 @@ public:
     static BigInt binpow(BigInt, BigInt);
     static BigInt binpow(BigInt, BigInt, BigInt);
     static BigInt gcd(BigInt, BigInt);
+    static AbstractMulter& get_multer();
+    static AbstractDivider& get_divider();
+    static void set_multer(AbstractMulter*);
+    static void set_divider(AbstractDivider*);
 
     int get_base();
     void set_base(int);
