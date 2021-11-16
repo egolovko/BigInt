@@ -5,6 +5,8 @@
 class BigInt;
 class NewtonRaphsonDivider;
 
+
+// Combination of Pow2 for int part and NewtonRaphson for real part dividers
 class CombinedP2NRDivider : public AbstractDivider {
 private:
     static NewtonRaphsonDivider* aprox_divider;
